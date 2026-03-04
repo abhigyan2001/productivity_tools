@@ -1,0 +1,61 @@
+# Starship Configuration - Windows PowerShell
+# Windows logo on blue background
+# Requires a Nerd Font in your terminal (e.g. FiraCode Nerd Font, MesloLGS NF)
+
+command_timeout = 1000
+scan_timeout = 30
+
+format = """
+[\uE0B6](fg:#0078D4)\
+[ \uE62A ](bg:#0078D4 fg:#ffffff bold)\
+[\uE0B0](fg:#0078D4 bg:#3ddc84)\
+$directory\
+[\uE0B0](fg:#3ddc84 bg:#c678dd)\
+$git_branch\
+$git_status\
+[\uE0B0](fg:#c678dd)\
+$fill\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+format = "[ $path ]($style)"
+style = "bg:#3ddc84 fg:#000000 bold"
+truncation_length = 3
+truncate_to_repo = true
+home_symbol = "~"
+read_only = "\uE0A2 "
+read_only_style = "bg:#3ddc84 fg:red"
+
+[git_branch]
+format = "[ \uE0A0 $branch ]($style)"
+style = "bg:#c678dd fg:#ffffff bold"
+
+[git_status]
+format = "[$all_status$ahead_behind ]($style)"
+style = "bg:#c678dd fg:#ffcc00 bold"
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+disabled = false
+
+[fill]
+symbol = " "
+
+[cmd_duration]
+min_time = 500
+format = "took [$duration]($style) "
+style = "bold yellow"
+show_milliseconds = false
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
