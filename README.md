@@ -1,4 +1,4 @@
-# Zsh Setup
+# Productivity Tools
 
 A modern Zsh environment using Starship for the prompt, configured in an agnoster powerline style.
 
