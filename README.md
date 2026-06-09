@@ -4,8 +4,9 @@ A modern Zsh environment using Starship for the prompt, configured in an agnoste
 
 ## Files
 
-- `zsh_install.sh` — Run this to install all tools and configure your shell from scratch
-- `.zshrc` — Zsh shell configuration with aliases, fzf, zoxide, etc.
+- `zsh_install.sh` — **Linux (Debian/Ubuntu, apt)** installer: installs all tools and configures your shell
+- `macos_install.sh` — **macOS (Homebrew)** installer: installs all tools and copies the configs into place
+- `.zshrc` — Zsh shell configuration with aliases, fzf, zoxide, etc. (cross-platform: Linux + macOS)
 - `starship.toml` — Starship prompt config (agnoster powerline style with Ubuntu logo)
 
 ## What gets installed
@@ -27,6 +28,8 @@ A modern Zsh environment using Starship for the prompt, configured in an agnoste
 
 ## Usage
 
+### Linux (Debian/Ubuntu)
+
 ```bash
 bash zsh_install.sh
 ```
@@ -39,6 +42,27 @@ cp starship.toml ~/.config/starship.toml
 source ~/.zshrc
 ```
 
+### macOS (Homebrew)
+
+```bash
+bash macos_install.sh
+```
+
+This installs [Homebrew](https://brew.sh) if it is missing, installs all the tools, and copies
+`.zshrc` and `starship.toml` into place (backing up any existing `~/.zshrc` first). Afterwards run:
+
+```bash
+source ~/.zshrc
+```
+
 ## Requirements
 
 A [Nerd Font](https://www.nerdfonts.com/) must be set in your terminal for the powerline arrows and icons to render correctly. Recommended: **MesloLGS NF** or **FiraCode Nerd Font**.
+
+On macOS you can install one with:
+
+```bash
+brew install --cask font-meslo-lg-nerd-font
+```
+
+then select **MesloLGS NF** in your terminal's preferences.

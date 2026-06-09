@@ -34,10 +34,21 @@ eval "$(zoxide init zsh)"
 alias cd=z
 
 # ============================================================================
-# FZF Integration
+# FZF Integration (cross-platform: Linux apt + macOS Homebrew)
 # ============================================================================
-if [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
-    source /usr/share/doc/fzf/examples/key-bindings.zsh
+if command -v fzf &>/dev/null && fzf --zsh &>/dev/null; then
+    # fzf >= 0.48 ships built-in shell integration
+    source <(fzf --zsh)
+else
+    # Fallback: source the shipped scripts from common install locations
+    for _fzf_dir in \
+        /usr/share/doc/fzf/examples \
+        /usr/local/opt/fzf/shell \
+        /opt/homebrew/opt/fzf/shell; do
+        [ -f "$_fzf_dir/key-bindings.zsh" ] && source "$_fzf_dir/key-bindings.zsh"
+        [ -f "$_fzf_dir/completion.zsh" ] && source "$_fzf_dir/completion.zsh"
+    done
+    unset _fzf_dir
 fi
 
 # ============================================================================
@@ -78,13 +89,27 @@ alias ....='cd ../../..'
 
 # Utility aliases
 alias tree='tree -L 2'
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+# Desktop notification when a long command finishes (Linux: notify-send, macOS: osascript)
+if command -v notify-send &>/dev/null; then
+    alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+elif command -v osascript &>/dev/null; then
+    alias alert='osascript -e "display notification \"$(history|tail -n1|sed -e '\''s/^[ ]*[0-9]\+[ ]*//;s/[;&|][ ]*alert$//'\'')\" with title \"Terminal\""'
+fi
 
 # ============================================================================
 # cowsay + fortune (random quote on shell start)
 # ============================================================================
 if command -v fortune &>/dev/null && command -v cowsay &>/dev/null; then
-    fortune | cowsay -f $(ls /usr/share/cowsay/cows/ | shuf -n1)
+    for _cowdir in \
+        /usr/share/cowsay/cows \
+        /usr/local/share/cowsay/cows \
+        /opt/homebrew/share/cowsay/cows; do
+        [ -d "$_cowdir" ] && break
+    done
+    # sort -R is portable across GNU (Linux) and BSD (macOS) coreutils
+    _cowfile=$(ls "$_cowdir" 2>/dev/null | sort -R | head -n1)
+    [ -n "$_cowfile" ] && fortune | cowsay -f "$_cowfile"
+    unset _cowdir _cowfile
 fi
 
 # ============================================================================
